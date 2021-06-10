@@ -1,0 +1,143 @@
+const  canvas = document.querySelector("canvas")
+const ctx = canvas.getContext("2d")
+var offsetX = canvas.width / 4
+var offsetY = canvas.height / 10
+var zoom = 0.01
+
+const particles = []
+
+
+for (var i = 0; i < 1000; i++) {
+    addParticle(Math.random() > 0 ? 1 : -1, Math.random() * canvas.width / zoom, Math.random() * canvas.height / zoom, Math.random() * 100000)
+    addParticle(Math.random() > 5 ? 1 : -1, Math.random() * canvas.width / zoom, 200000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
+}
+zoom = 0.002
+draw()
+
+var intervalHandle = setInterval(() =>{
+    physics()
+}, 10)
+
+var drawHandle = setInterval(() =>{
+    draw()
+}, 1000/60)
+    
+var p, p2, d, f, last
+const Ke = 8.98755e9 
+
+function physics() {
+    for (p of particles) {
+        p.edx = 0
+        p.edy = 0
+        p.edz = 0
+           
+        if (p.charge && !p.bound) {
+            for (p2 of particles) {
+                if (p === p2 || !p2.charge || p2.bound) continue
+                
+                d = Math.sqrt(Math.pow(p.x - p2.x, 2) + Math.pow(p.y - p2.y, 2) + Math.pow(p.z - p2.z, 2))
+                
+                f = (Ke * p.charge * p2.charge) / (d*d)
+                
+                if (p.charge === p2.charge * -1 && Math.abs(f) > Math.abs(d)) {
+                    p.bound = p2
+                    p2.bound = p
+                    //p.charge = 0
+                    //p2.charge = 0
+                    //console.log(f, d)
+                    /*last.dx = Math.random() - 0.5
+                    last.dy = Math.random() - 0.5
+                    last.dz = Math.random() - 0.5
+                    p2.dx = last.dx
+                    p2.dy = last.dy
+                    p2.dz = last.dz
+                    p.dx = Math.random() - 0.5
+                    p.dy = Math.random() - 0.5
+                    p.dz = Math.random() - 0.5
+                    */
+                }
+                else {
+                    p.edx += f * (p.x - p2.x) / d
+                    p.edy += f * (p.y - p2.y) / d
+                    p.edz += f * (p.z - p2.z) / d
+        
+                }
+                
+            }
+        }
+    }
+    for (p of particles) {
+        p.x += p.dx + p.edx
+        p.y += p.dy + p.edy
+        p.z += p.dz + p.edz
+    }
+}
+
+function draw() {
+    //ctx.translate(offsetX, offsetY)
+
+    canvas.width = canvas.width
+    for (p of particles) {
+        if (p.bound) continue
+        
+        /*
+        ctx.strokeStyle = p.charge === -1 ? "red" : p.charge === 1 ? "blue" : "#808080"
+        ctx.globalAlpha = p.bound ? 0.3 : 1
+        ctx.beginPath()
+        if (p.charge > 0) {
+            ctx.moveTo(offsetX + p.x * zoom + 4, offsetY + p.y * zoom)
+            ctx.lineTo(offsetX + p.x * zoom, offsetY + p.y * zoom + 4)
+        }
+        else if (p.charge < 0) {
+            ctx.moveTo(offsetX + p.x * zoom, offsetY + p.y * zoom)
+            ctx.lineTo(offsetX + p.x * zoom + 4, offsetY + p.y * zoom + 4)
+        }
+        ctx.stroke()
+        */
+
+        ctx.fillStyle = p.charge === -1 ? "red" : p.charge === 1 ? "blue" : "#808080"
+        ctx.fillRect(offsetX + p.x * zoom, offsetY + p.y * zoom, 4, 4)
+            
+    }
+
+}
+
+
+
+
+
+function addParticle(charge, x, y, z, dx, dy, dz) {
+    particles.push({
+        charge: charge || 0, 
+        x: x || 0, 
+        y: y || 0, 
+        z: z || 0,
+        dx: dx || 0, 
+        dy: dy || 0, 
+        dz: dz || 0,
+        map: new Map()
+    })
+}
+
+function addAtom(number, x, y, z) {
+    for (var i = 0; i < number; i++) {
+        addParticle(-1, x, y, z)
+        addParticle(0, x, y, z)
+        addParticle(1, x, y, z)
+    }
+}
+
+
+/* things to add
+
+* magnets
+* wires
+* glass
+* cameras
+* radio broadcast/reciever
+* double slit experiment
+
+
+*/
+
+document.body.onkeypress = e => clearInterval(intervalHandle)
