@@ -7,9 +7,10 @@ var zoom = 0.01
 const particles = []
 
 
-for (var i = 0; i < 1000; i++) {
-    addParticle(Math.random() > 0 ? 1 : -1, Math.random() * canvas.width / zoom, Math.random() * canvas.height / zoom, Math.random() * 100000)
-    addParticle(Math.random() > 5 ? 1 : -1, Math.random() * canvas.width / zoom, 200000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
+for (var i = 0; i < 100; i++) {
+    addParticle(1, Math.random() > 0 ? 1 : -1, Math.random() * canvas.width / zoom, Math.random() * canvas.height / zoom, Math.random() * 100000)
+    addParticle(5, Math.random() > 5 ? 1 : -1, Math.random() * canvas.width / zoom, 200000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
+    addParticle(1, Math.random() > 5 ? 1 : -1, 100000 + Math.random() * canvas.width / zoom, 100000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
 }
 zoom = 0.002
 draw()
@@ -42,24 +43,11 @@ function physics() {
                 if (p.charge === p2.charge * -1 && Math.abs(f) > Math.abs(d)) {
                     p.bound = p2
                     p2.bound = p
-                    //p.charge = 0
-                    //p2.charge = 0
-                    //console.log(f, d)
-                    /*last.dx = Math.random() - 0.5
-                    last.dy = Math.random() - 0.5
-                    last.dz = Math.random() - 0.5
-                    p2.dx = last.dx
-                    p2.dy = last.dy
-                    p2.dz = last.dz
-                    p.dx = Math.random() - 0.5
-                    p.dy = Math.random() - 0.5
-                    p.dz = Math.random() - 0.5
-                    */
                 }
                 else {
-                    p.edx += f * (p.x - p2.x) / d
-                    p.edy += f * (p.y - p2.y) / d
-                    p.edz += f * (p.z - p2.z) / d
+                    p.edx += f / p.m * (p.x - p2.x) / d
+                    p.edy += f / p.m * (p.y - p2.y) / d
+                    p.edz += f / p.m * (p.z - p2.z) / d
         
                 }
                 
@@ -96,7 +84,7 @@ function draw() {
         */
 
         ctx.fillStyle = p.charge === -1 ? "red" : p.charge === 1 ? "blue" : "#808080"
-        ctx.fillRect(offsetX + p.x * zoom, offsetY + p.y * zoom, 4, 4)
+        ctx.fillRect(offsetX + p.x * zoom, offsetY + p.y * zoom, 4 * p.m, 4 * p.m)
             
     }
 
@@ -106,16 +94,16 @@ function draw() {
 
 
 
-function addParticle(charge, x, y, z, dx, dy, dz) {
+function addParticle(mass, charge, x, y, z, dx, dy, dz) {
     particles.push({
+        m: mass || 0, 
         charge: charge || 0, 
         x: x || 0, 
         y: y || 0, 
         z: z || 0,
         dx: dx || 0, 
         dy: dy || 0, 
-        dz: dz || 0,
-        map: new Map()
+        dz: dz || 0
     })
 }
 
