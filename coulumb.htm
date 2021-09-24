@@ -1,0 +1,256 @@
+<html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            #right-side {
+                left: 730px;
+                top: 20px;
+                position: absolute;
+            
+            }
+            #graph {
+                height:600px;
+                width: 600px;
+            }
+            .model-label {
+                margin: 4px 0;
+                
+                
+            }
+
+            hr {
+                opacity: 0.1;
+                margin:18px;
+            }
+
+            input {
+                width: 80px;
+            }
+
+            .model-units {
+                columns: #444444;
+                font-size: 12px;
+                padding-left:4px;
+            }
+
+            #details, #notes {
+                width:700px;
+            }
+            #notes {
+                margin-left: 20px;
+            }
+
+            .model-header {
+                padding:4px;
+                display:flex;
+                align-items: center;
+            }
+            .header-spacer {
+                flex-grow: 1
+            }
+
+            td, th {
+                padding:4px 20px;
+            }
+        </style>
+    </head>
+<body>
+
+<div id="graph-side">
+    <button id="startButton">Run All</button> <button id="stopButton">Stop</button>
+    <br>
+    <br>
+    X-axis: 
+    <select id="graph-x-axis">
+        <option>starting distance to target (billion light years)</option>
+        <option>time to target (billions of years)</option>
+        <option>z redshift</option>
+    </select>
+    <br>    
+    Y-axis: 
+    <select id="graph-y-axis">
+        <option>time to target (billions of years)</option>
+        <option>time difference from static (billions of years)</option>
+        <option>delayed time / static time - 1</option>
+        <option>(1 - static time / delayed time)</option>
+        <option>(1 - v)</option>
+        <option>z redshift</option>
+        <option>starting distance to target (billion light years)</option>
+        <option>reached distance of target (billion light years)</option>
+        <option>dz</option>
+        
+    </select>
+    <br>
+    <canvas id="graph" height="600" width="600"></canvas>
+    <br>
+    Zoom X: <input type="number" id="graph-zoom-x" value="1.0" step="0.01" min="0.01">
+    Zoom Y: <input type="number" id="graph-zoom-y" value="1.0" step="0.01" min="0.01">
+
+    <hr>
+    Starting frequency=<input id="start-freq">
+    Starting wavelength=<input id="start-wavelength">
+    <br>
+    Log: t=<input id="find-t"> d=<input id="find-d"> z=<input id="find-z"> v=<input id="find-v"> 
+    target=<input id="find-target"> wavelength=<input id="find-w">
+    
+    <pre id="output"></pre>
+</div>
+
+<div id="right-side">
+<p>Click a model to play or reset it.</p>
+
+<div id="details"></div>
+
+<div id="notes">
+    <hr>
+    <p>Units of H for input boxes:</p>
+
+    <ul>
+        <li>Inverse models:  Gly<sup>-1</sup></li>
+        <li>Others: light year / year / Gly</li>
+    </ul>
+
+    <p>1 megaparsec to Mly = 3.2638 Mly <a href="https://www.convertunits.com/from/megaparsec/to/Mly" target="_ou">https://www.convertunits.com/from/megaparsec/to/Mly</a></p>
+    <hr>
+    <p>Sample z's (white dots when y-axis is redshift) from <a href="https://wolframalpha.com/" target="_out">WolframAlpha</a></p>
+    <pre id="zoutput">
+    </pre>
+
+    <a href="https://github.com/mikehelland/hubbles-law/blob/master/test.htm">Source code</a>
+</notes>
+</div>
+<script>
+var black = true
+
+    var outputDiv = document.getElementById("output")
+    var trunc = n => Math.trunc(n * 10000) / 10000
+    var output = (model, photon) => {
+        outputDiv.innerHTML += (model.label || model.name) + ", " + 
+                                "t=" + model.t.toString().padEnd(8) + " d=" + 
+                                trunc(photon.x) + ", z=" + trunc(photon.z) + ", v=" + 
+                                trunc(photon.dx) + ", f=" + trunc(photon.f) + 
+                                ", w=" + trunc(299792458/photon.f) + "\n"
+    }
+    
+    var zoutput = document.getElementById("zoutput")
+    
+    var details = document.getElementById("details")
+
+    var graph = document.getElementById("graph")
+    var ctxG = graph.getContext("2d")
+    var models = []
+
+    var startFreqInput = document.getElementById("start-freq")
+    var startWavelengthInput = document.getElementById("start-wavelength")
+    
+    
+    // the models advance by 1 million years each step
+    // the units for distance are in Mly (million light years)
+
+    // the speed of light is 1 million lightyears per million years
+    
+    // Hubble's Constant (H) is in units of Gly^-1 or ly/y/Gly, so it is divided by 1000  
+
+    var c = 1
+
+    var zoomG = 1000
+    var zoomGY = 0.0001
+    var offset = 20
+    
+    // electrostatic force 
+    const Ke = 8.98755e9 
+
+    // electron mass kg
+    const m_e = 9e-31
+
+    // electron charge Coloumbs
+    const charge_e = -1.602e-19
+
+
+    var stepx = 1e-3
+    var drawx, drawy, dgt, dgm, dgi
+    function drawGraph() {
+        
+        ctxG.lineWidth = 1
+        ctxG.fillStyle = black ? "black" : "white"
+        ctxG.fillRect(0, 0, graph.width, graph.height)
+
+        ctxG.strokeStyle = !black ? "black" : "white"
+        ctxG.strokeRect(offset, -10, graph.width, graph.height + 10 - offset)
+        
+        ctxG.lineWidth = 2
+        ctxG.strokeStyle = "red"
+        ctxG.beginPath()
+        for (var d = stepx; d < 1; d+=stepx) {
+            drawx = d
+            drawy = Ke * charge_e * charge_e / (d*d) / m_e
+            if (d === stepx) {
+                ctxG.moveTo(offset + drawx * zoomG, -offset + graph.height - drawy * zoomGY)
+            }
+            else {
+                ctxG.lineTo(offset + drawx * zoomG, -offset + graph.height - drawy * zoomGY)
+            }
+
+        }
+        ctxG.stroke()
+            
+
+        ctxG.font = "14px sans-serif"
+        
+        ctxG.fillStyle = !black ? "black" : "white"
+        ctxG.textAlign = "right"
+        ctxG.fillText(xAxis.value, graph.width - 4, graph.height - 30)
+        ctxG.textAlign = "left"
+        ctxG.fillText(yAxis.value, offset + 5, offset)
+        
+        ctxG.font = "10px sans-serif"
+        if (yAxis.selectedIndex < 2 || yAxis.selectedIndex === 6) {
+            for (dgi = 0; dgi < 80; dgi+=5) {
+                ctxG.fillText(dgi, 4, -offset + graph.height - dgi * 1000 * zoomGY + 4)    
+            }
+        }
+        else {
+            for (dgi = 0; dgi < 1000; dgi+=10) {
+                ctxG.fillText(dgi / 10, 4, -offset + graph.height - dgi / 10 * 10000 * zoomGY + 4)    
+            }
+        }
+
+        if (xAxis.selectedIndex < 2) {
+            for (dgi = 0; dgi < 100; dgi+=2) {
+                ctxG.fillText(dgi, offset + dgi * 1000 * zoomG, graph.height - 5)    
+            }
+        }
+        else {
+            for (dgi = 0; dgi < 110; dgi+=10) {
+                ctxG.fillText(dgi / 10, offset + dgi / 10 * 10000 * zoomG + 4, graph.height - 5)    
+            }
+        }
+
+        
+    }
+
+
+document.getElementById("startButton").onclick = e => models.forEach(model => runModel(model))
+document.getElementById("stopButton").onclick = e => models.forEach(model => stopModel(model))
+
+document.getElementById("graph-zoom-x").onchange = e => {zoomG = zoom * zoom_gx * e.target.value}
+document.getElementById("graph-zoom-y").onchange = e => {zoomGY = zoom * zoom_gy * e.target.value}
+
+var yAxis = document.getElementById("graph-y-axis")
+var xAxis = document.getElementById("graph-x-axis")
+
+drawGraph()
+
+
+setTimeout(() => {
+    //models.forEach(model => runModel(model))
+}, 500)
+
+setTimeout(() => {
+    //models.forEach(model => stopModel(model))
+}, 10000)
+
+</script>
+

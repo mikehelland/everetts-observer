@@ -1,18 +1,27 @@
 const  canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
 var offsetX = canvas.width / 4
-var offsetY = canvas.height / 10
+var offsetY = 0//canvas.height / 2
 var zoom = 0.01
 
 const particles = []
 
 
-// clumps at random
-for (var i = 0; i < 100; i++) {
+//addParticle(1,  -1,   -1e4,   0,  0)
+//addParticle(1,  1,   0,      1e4, 0)
+//addParticle(1, -1,   1e4,    -0,  0)
+
+addParticle(1,  2/3,   -1e4,   0,  0)
+addParticle(1,  -1/3,   0,      1e4, 0)
+addParticle(1, 2/3,   1e4,    -0,  0)
+
+
+/*for (var i = 0; i < 100; i++) {
     addParticle(1, 2/3, Math.random() * canvas.width / zoom, Math.random() * canvas.height / zoom, Math.random() * 100000)
-    addParticle(1, -1/3, Math.random() * canvas.width / zoom, 200000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
+    addParticle(1, 2/3, Math.random() * canvas.width / zoom, 200000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
     addParticle(1, -1/3, 100000 + Math.random() * canvas.width / zoom, 100000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
-}
+}*/
+
 
 zoom = 0.002
 draw()
@@ -62,7 +71,7 @@ function physics() {
         p.z += p.dz + p.edz
     }
 }
-
+var lineLength = 10
 function draw() {
     //ctx.translate(offsetX, offsetY)
 
@@ -74,14 +83,10 @@ function draw() {
         ctx.strokeStyle = p.charge < 0 ? "red" : "blue"
         ctx.globalAlpha = p.bound ? 0.5 : 1
         ctx.beginPath()
-        if (p.charge > 0) {
-            ctx.moveTo(offsetX + p.x * zoom + p.charge * 8, offsetY + p.y * zoom)
-            ctx.lineTo(offsetX + p.x * zoom, offsetY + p.y * zoom + p.charge * 8)
-        }
-        else if (p.charge < 0) {
-            ctx.moveTo(offsetX + p.x * zoom, offsetY + p.y * zoom)
-            ctx.lineTo(offsetX + p.x * zoom + p.charge * 8, offsetY + p.y * zoom + p.charge * 8)
-        }
+        ctx.moveTo((offsetX + p.x * zoom) - lineLength, (offsetY + p.y * zoom) + (p.charge * lineLength))
+        ctx.lineTo((offsetX + p.x * zoom) + lineLength, (offsetY + p.y * zoom) - (p.charge * lineLength))
+        //ctx.lineTo((offsetX + p.x * zoom) + (lineLength), (offsetY + p.y * zoom) + (lineLength))
+        
         ctx.stroke()
         
         //ctx.fillStyle = p.charge < 0 ? "red" : "blue"

@@ -1,0 +1,214 @@
+<html>
+    <head>
+        <style>
+            html, body {overflow-y:hidden;height:100%; padding:0;margin:0;box-sizing: border-box;}
+            canvas {
+            padding:0;margin:0;
+            height:100%;
+            width:100%;
+            border:0px solid black;
+            box-sizing: border-box;
+            background-color:black;
+            }
+
+            #stats {
+            color:white;
+            position:absolute;
+            top:10px;
+            left:10px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas></canvas>
+        <div id="stats">
+            Time: <span id="time">0</span>
+            <br>
+            Mass: <span id="mass">0</span>
+            <br>
+            Kinetic Energy: <span id="ke">0</span>
+            <br>
+            Photon Energy: <span id="pe">0</span>
+            <br>
+            Total Energy: <span id="te">0</span>
+            
+            
+          </div>
+
+    <script>
+        var t = 0
+        var timeLabel = document.getElementById("time")
+        var massLabel = document.getElementById("mass")
+        var keLabel = document.getElementById("ke")
+        var peLabel = document.getElementById("pe")
+        var teLabel = document.getElementById("te")
+
+        var massStat
+        var keStat = 0
+        var peStat
+        var teStat
+
+
+        const  canvas = document.querySelector("canvas")
+        canvas.width = canvas.clientWidth
+        canvas.height = canvas.clientHeight
+        const ctx = canvas.getContext("2d")
+        var offsetX = canvas.width / 2
+        var offsetY = canvas.height / 2
+        var zoom = 1e2
+
+        // electrostatic force 
+        const Ke = 8.98755e9 
+
+        // electron mass kg
+        const m_e = 9e-31
+
+        // electron charge Coloumbs
+        const charge_e = -1.602e-19
+
+        // timestep
+        const timestep = 1e-9
+
+        // here's the particles array, it stores the stuff
+        var particles = []
+
+
+        //make positrons and electrons
+
+        //for (var i = 0; i < 50; i++) {
+            addParticle(m_e, 
+                        charge_e, 
+                        0, 
+                        0, 0)
+            addParticle(m_e, 
+                        charge_e * -1, 
+                        1, 
+                        0, 0)
+        
+        //}
+
+
+        draw()
+
+        var _ii
+        var intervalHandle = setInterval(() =>{
+            for (_ii = 0; _ii<500;_ii++){
+                physics()
+            }
+        }, 1)
+
+        var drawHandle = setInterval(() =>{
+            draw()
+            massLabel.innerHTML = massStat
+            keLabel.innerHTML = keStat
+            timeLabel.innerHTML = t
+        }, 1000/60)
+            
+        var p, p2, d, f, last
+
+
+        function physics() {
+        
+            massStat = 0 
+            //keStat = 0
+            peStat = 0 
+            t += timestep
+        
+            for (p of particles) {
+                p.edx = 0
+                p.edy = 0
+                p.edz = 0
+                
+                if (p.charge && !p.bound) {
+                    for (p2 of particles) {
+                        if (p === p2 || !p2.charge || p2.bound) continue
+                        
+                        d = Math.sqrt(
+                        Math.pow(p.x - p2.x, 2) + 
+                        Math.pow(p.y - p2.y, 2) + 
+                        Math.pow(p.z - p2.z, 2))
+                        
+                        f = (Ke * p.charge * p2.charge) / (d*d)
+                        //console.log(f)
+                        
+                        if (p.charge === p2.charge * -1 && Math.abs(f) > Math.abs(d)) {
+                            p.bound = p2
+                            p2.bound = p
+                            console.log(f, d)
+                            if (p2.m === 50)
+                                captured.push({f, d})
+                        }
+                        else {
+                            p.edx += f / p.m * (p.x - p2.x) / d
+                            p.edy += f / p.m * (p.y - p2.y) / d
+                            p.edz += f / p.m * (p.z - p2.z) / d
+                
+                        }
+                        
+                    }
+                }
+            }
+            for (p of particles) {
+                p.x += (p.dx + p.edx) * timestep
+                p.y += (p.dy + p.edy) * timestep
+                p.z += (p.dz + p.edz) * timestep
+            
+                massStat += p.m
+                if (p.edx  > keStat ) {
+                    keStat = p.edx //* timestep
+                }
+            }
+        }
+
+        var lineLength = 10
+        function draw() {
+            //ctx.translate(offsetX, offsetY)
+
+            canvas.width = canvas.width
+            for (p of particles) {
+                //if (p.bound) continue
+                
+                ctx.lineWidth = 2
+                ctx.strokeStyle = p.charge < 0 ? "red" : "blue"
+                ctx.globalAlpha = p.bound ? 0.5 : 1
+                ctx.beginPath()
+                ctx.moveTo(
+                (offsetX + p.x * zoom) - lineLength, 
+                (offsetY + p.y * zoom) + (p.charge/charge_e * lineLength))
+                ctx.lineTo(
+                (offsetX + p.x * zoom) + lineLength, 
+                (offsetY + p.y * zoom) - (p.charge/charge_e * lineLength))
+                ctx.stroke()
+                
+            }
+
+        }
+
+
+
+
+
+        function addParticle(mass, charge, x, y, z, dx, dy, dz) {
+            particles.push({
+                m: mass || 0, 
+                charge: charge || 0, 
+                x: x || 0, 
+                y: y || 0, 
+                z: z || 0,
+                dx: dx || 0, 
+                dy: dy || 0, 
+                dz: dz || 0
+            })
+        }
+
+        function stop() {
+            clearInterval(intervalHandle)
+            clearInterval(drawHandle)
+        }
+
+        document.body.onkeypress = e => stop()
+
+    </script>
+
+</body>

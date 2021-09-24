@@ -1,3 +1,8 @@
+// purpose of this is to find the binding energy
+
+var captured = []
+
+
 const  canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
 var offsetX = canvas.width / 4
@@ -7,11 +12,14 @@ var zoom = 0.01
 const particles = []
 
 
-// clumps at random
+//    addParticle(1, 2/3, Math.random() * canvas.width / zoom, Math.random() * canvas.height / zoom, Math.random() * 100000)
+//    addParticle(1, -1/3, Math.random() * canvas.width / zoom, 200000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
+
 for (var i = 0; i < 100; i++) {
-    addParticle(1, 2/3, Math.random() * canvas.width / zoom, Math.random() * canvas.height / zoom, Math.random() * 100000)
-    addParticle(1, -1/3, Math.random() * canvas.width / zoom, 200000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
-    addParticle(1, -1/3, 100000 + Math.random() * canvas.width / zoom, 100000 + Math.random() * canvas.height / zoom, Math.random() * 100000)
+    addParticle(1, -1, 10000 + Math.random() * canvas.width / zoom, 10000 + Math.random() * canvas.height / zoom, 10000 + Math.random() * canvas.height / zoom)
+    addParticle(50, 1, 10000 + Math.random() * canvas.width / zoom, 10000 + Math.random() * canvas.height / zoom, 10000 + Math.random() * canvas.height / zoom)
+    //addParticle(1, -1, 10000 + Math.random() * canvas.width / zoom, 10000 + Math.random() * canvas.height / zoom, 10000 + Math.random() * canvas.height / zoom)
+    
 }
 
 zoom = 0.002
@@ -27,6 +35,8 @@ var drawHandle = setInterval(() =>{
     
 var p, p2, d, f, last
 const Ke = 8.98755e9 
+
+
 
 function physics() {
     for (p of particles) {
@@ -45,6 +55,9 @@ function physics() {
                 if (p.charge === p2.charge * -1 && Math.abs(f) > Math.abs(d)) {
                     p.bound = p2
                     p2.bound = p
+                    console.log(f, d)
+                    if (p2.m === 50)
+                        captured.push({f, d})
                 }
                 else {
                     p.edx += f / p.m * (p.x - p2.x) / d
@@ -63,6 +76,7 @@ function physics() {
     }
 }
 
+var lineLength = 10
 function draw() {
     //ctx.translate(offsetX, offsetY)
 
@@ -74,14 +88,8 @@ function draw() {
         ctx.strokeStyle = p.charge < 0 ? "red" : "blue"
         ctx.globalAlpha = p.bound ? 0.5 : 1
         ctx.beginPath()
-        if (p.charge > 0) {
-            ctx.moveTo(offsetX + p.x * zoom + p.charge * 8, offsetY + p.y * zoom)
-            ctx.lineTo(offsetX + p.x * zoom, offsetY + p.y * zoom + p.charge * 8)
-        }
-        else if (p.charge < 0) {
-            ctx.moveTo(offsetX + p.x * zoom, offsetY + p.y * zoom)
-            ctx.lineTo(offsetX + p.x * zoom + p.charge * 8, offsetY + p.y * zoom + p.charge * 8)
-        }
+        ctx.moveTo((offsetX + p.x * zoom) - lineLength, (offsetY + p.y * zoom) + (p.charge * lineLength))
+        ctx.lineTo((offsetX + p.x * zoom) + lineLength, (offsetY + p.y * zoom) - (p.charge * lineLength))
         ctx.stroke()
         
         //ctx.fillStyle = p.charge < 0 ? "red" : "blue"
