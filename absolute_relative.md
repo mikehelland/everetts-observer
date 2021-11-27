@@ -33,7 +33,7 @@ I posted parts of the above quote by Newton in a tweet to Ethan Siegel and this 
 
 This is not meant to be a criticism of Dr. Siegel, who is kind enough to reply, just to illustrate how persistent this story is.
 
-We can see that in Newton’s work, right on page 6, he explicitly defines what he means by space and time. There is nothing tacit about it. But this quote rang a bell.
+We can see that in Newton’s work, right on page 6, he explicitly defines what he means by space and time. There is nothing tacit about it. But these words rang a bell.
 
 ## Einstein
 
