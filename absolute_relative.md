@@ -9,7 +9,7 @@ But I would like to show you that this story is not the whole truth.
 
 ## Newton
 
-Let’s start with Newton, who has this to say, on page 6 of the Principia:
+Let’s start with Newton, who has this to say, on [page 6 of the Principia](https://plato.stanford.edu/entries/newton-stm/scholium.html):
 
 >I do not define time, space, place, and motion, as being well known to all. Only I must observe, that the common people conceive those quantities under no other notions but from the relation they bear to sensible objects.
 
@@ -37,7 +37,7 @@ We can see that in Newton’s work, right on page 6, he explicitly defines what 
 
 ## Einstein
 
-We find in the book Relativity, by Einstein, page 32, the following:
+We find in the book [Relativity, by Einstein](https://github.com/mikehelland/everetts-observer/raw/master/papers/relativity.pdf), page 32, the following:
 
 >Now before the advent of the theory of relativity it had always tacitly been assumed in physics that the statement of time had an absolute significance, i.e. that it is independent of the state of motion of the body of reference. But we have just seen that this assumption is incompatible with the most natural definition of simultaneity; if we discard this assumption, then the conflict between the law of the propagation of light in vacuo and the principle of relativity (developed in Section VII) disappears. 
 
@@ -78,7 +78,7 @@ The first thesis was later read by Bryce DeWitt, who interpreted the work as sug
 
 But it is Everett’s relative state formulation that is the most relevant to a discussion about absolute and relative time. Proposed as both a way to go about solving the problem of quantum gravity, and as a solution to the measurement problem, the ambitious Everett went so far as to name his work a “formulation” rather than an “interpretation” of quantum mechanics.
 
-His solution to the measurement problem is to essentially flip it upside down. Rather than ask “what is the role of measurement in the model”, Everett says it is our task to model a measurement being made. He writes on page 9:
+His solution to the measurement problem is to essentially flip it upside down. Rather than ask “what is the role of measurement in the model”, Everett says it is our task to model a measurement being made. [He writes on page 9](https://github.com/mikehelland/everetts-observer/raw/master/papers/relative_state.pdf):
 
 >We have the task of making deductions about the appearance of phenomena
 >to observers which are considered as purely physical systems and are treated
