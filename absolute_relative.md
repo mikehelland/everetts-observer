@@ -1,13 +1,13 @@
-﻿**The Real Story of Absolute and Relative Time**
+﻿# The Real Story of Absolute and Relative Time
 
 
 We all know the story. Newton said time is absolute. Einstein said time is relative. A tale so ingrained and unquestionable, that bringing it up for any reason other than the setup to a meme might seem pointless.
 
-[img]
+!(https://github.com/mikehelland/everetts-observer/raw/master/papers/time_meme.jpeg)[time meme]
 
 But I would like to show you that this story is not the whole truth.
 
-**Newton**
+## Newton
 
 Let’s start with Newton, who has this to say, on page 6 of the Principia:
 
@@ -29,13 +29,13 @@ While it can be debated what he meant precisely, it should be clear that simplif
 
 I posted parts of the above quote by Newton in a tweet to Ethan Siegel and this was his response:
 
-[img]
+![https://github.com/mikehelland/everetts-observer/raw/master/papers/tacit.png][tweet]
 
 This is not meant to be a criticism of Dr. Siegel, who is kind enough to reply, just to illustrate how persistent this story is.
 
 We can see that in Newton’s work, right on page 6, he explicitly defines what he means by space and time. There is nothing tacit about it. But this quote rang a bell.
 
-**Einstein**
+## Einstein
 
 We find in the book Relativity, by Einstein, page 32, the following:
 
@@ -64,7 +64,7 @@ For Newton and Einstein, I do not think this dilemma was present, and both would
 
 The disagreement among them would have been that Newton felt his physics described absolute time and space, while Einstein would have asserted that his physics describe the world of relative time and space.
 
-**Everett**
+## Everett
 
 In the case where the mathematics of a theory only allows for one type of time, then there is a valid reason to choose one. And since relative time is what is actually observed, and it is desirable for theories to describe what is actually observed, then relative time is the best choice.
 
@@ -87,11 +87,13 @@ His solution to the measurement problem is to essentially flip it upside down. R
 >observer. Thus, in order to say that an observer 0 has observed the event α,
 >it is necessary that the state of 0 has become changed from its former state
 >to a new state which is dependent upon α.
+>
 >It will suffice for our purposes to consider the observers to possess memo-
 >ries (i.e., parts of a relatively permanent nature whose states are in correspon-
 >dence with past experience of the observers). In order to make deductions
 >about the past experience of an observer it is sufficient to deduce the present
 >contents of the memory as it appears within the mathematical model.
+>
 >As models for observers we can, if we wish, consider automatically func-
 >tioning machines, possessing sensory apparatus and coupled to recording
 >devices capable of registering past sensory data and machine configurations.
@@ -104,6 +106,7 @@ His solution to the measurement problem is to essentially flip it upside down. R
 >mediately recorded in the memory, then the actions of the machine at a given
 >instant can be regarded as a function of the memory contents only, and all
 >relavant [sic] experience of the machine is contained in the memory.
+>
 >For such machines we are justified in using such phrases as “the machine
 >has perceived A” or “the machine is aware of A” if the occurrence of A is
 >represented in the memory, since the future behavior of the machine will
@@ -136,6 +139,6 @@ Considering such a theory, it’s difficult not to think back to Newton’s orig
 
 It seems to me you can draw a line between Newton’s definitions of absolute and relative time to Everett’s relative state formulation.
 
-**Conclusion**
+## Conclusion
 
 The story that Newton said “absolute!” and Einstein said “relative!” is useful, illustrative, and mostly true, in the context of what the math describes. But in the bigger picture, and with potentially new mathematical models with new abilities, it should be kept in mind that thinking about time as being only absolute or only relative is a false dilemma that Newton and Einstein would have considered  as unnecessary as choosing only one side of a coin to exist. For there to be an “up” but not a “down”.
