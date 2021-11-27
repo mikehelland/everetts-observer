@@ -3,7 +3,7 @@
 
 We all know the story. Newton said time is absolute. Einstein said time is relative. A tale so ingrained and unquestionable, that bringing it up for any reason other than the setup to a meme might seem pointless.
 
-!(https://github.com/mikehelland/everetts-observer/raw/master/papers/time_meme.jpeg)[time meme]
+![time meme](https://github.com/mikehelland/everetts-observer/raw/master/papers/time_meme.jpeg)
 
 But I would like to show you that this story is not the whole truth.
 
@@ -29,7 +29,7 @@ While it can be debated what he meant precisely, it should be clear that simplif
 
 I posted parts of the above quote by Newton in a tweet to Ethan Siegel and this was his response:
 
-![https://github.com/mikehelland/everetts-observer/raw/master/papers/tacit.png][tweet]
+![tweet][https://github.com/mikehelland/everetts-observer/raw/master/papers/tacit.png]
 
 This is not meant to be a criticism of Dr. Siegel, who is kind enough to reply, just to illustrate how persistent this story is.
 
