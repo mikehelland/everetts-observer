@@ -29,7 +29,7 @@ While it can be debated what he meant precisely, it should be clear that simplif
 
 I posted parts of the above quote by Newton in a tweet to Ethan Siegel and this was his response:
 
-![tweet][https://github.com/mikehelland/everetts-observer/raw/master/papers/tacit.png]
+![tweet](https://github.com/mikehelland/everetts-observer/raw/master/papers/tacit.png)
 
 This is not meant to be a criticism of Dr. Siegel, who is kind enough to reply, just to illustrate how persistent this story is.
 
